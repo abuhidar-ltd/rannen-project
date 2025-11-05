@@ -1,1 +1,20 @@
-Pillow>=12.0.0
+# ===============================================
+# REQUIRED LIBRARIES FOR IMAGE ENCRYPTION
+# ===============================================
+#
+# This file lists all the Python libraries needed
+# to run the image encryption program.
+#
+# HOW TO INSTALL:
+# Run this command in your terminal:
+#   pip install -r requirements.txt
+#
+# Or use the setup script:
+#   python3 setup.py
+#
+# ===============================================
+
+# Pillow - Python Imaging Library
+# Used for: Opening, editing, and saving images
+# We need this to convert images to bytes and back
+Pillow>=8.0.0

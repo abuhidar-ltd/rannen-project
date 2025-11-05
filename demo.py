@@ -1,237 +1,222 @@
 #!/usr/bin/env python3
 """
-Demo Script for Image Encryption Application
+===============================================
+DEMO SCRIPT - SEE THE ENCRYPTION IN ACTION!
+===============================================
 
-This script demonstrates the functionality of the image encryption tool
-by creating test images and performing encryption/decryption operations.
+This script demonstrates how the image encryption works.
+It will:
+1. Create a simple test image
+2. Encrypt it with a password
+3. Decrypt it back
+4. Show you the results
+
+Run this to see the magic happen!
 """
 
-import os
-import sys
-from PIL import Image, ImageDraw, ImageFont
+# Import what we need
 from image_encryption import ImageEncryption
+from PIL import Image, ImageDraw
+import os
 
 
-def create_sample_images():
-    """Create sample images for testing."""
-    print("Creating sample images...")
+def create_test_image():
+    """
+    Create a simple test image to encrypt.
+    We'll make a colorful square with some text!
+    """
+    print("\n" + "="*60)
+    print("STEP 1: Creating a test image")
+    print("="*60)
     
-    # Create a colorful test image
-    img1 = Image.new('RGB', (400, 300), color='lightblue')
-    draw1 = ImageDraw.Draw(img1)
+    # Create a new image: 400x300 pixels, light blue background
+    # RGB means Red-Green-Blue color mode
+    img = Image.new('RGB', (400, 300), color='lightblue')
     
-    # Add text
-    try:
-        font = ImageFont.load_default()
-    except:
-        font = None
+    # Create a drawing object so we can draw on the image
+    draw = ImageDraw.Draw(img)
     
-    draw1.text((50, 50), "Sample Image 1", fill='darkblue', font=font)
-    draw1.text((50, 80), "This is a test image for encryption", fill='darkblue', font=font)
+    # Draw a red rectangle
+    # Format: [x1, y1, x2, y2] where (x1,y1) is top-left, (x2,y2) is bottom-right
+    draw.rectangle([50, 50, 150, 150], fill='red', outline='darkred', width=3)
     
-    # Add shapes
-    draw1.rectangle([50, 120, 150, 170], fill='red', outline='darkred', width=2)
-    draw1.ellipse([200, 120, 300, 170], fill='green', outline='darkgreen', width=2)
-    draw1.polygon([(350, 120), (375, 170), (325, 170)], fill='yellow', outline='orange', width=2)
+    # Draw a green circle (ellipse)
+    draw.ellipse([200, 50, 300, 150], fill='green', outline='darkgreen', width=3)
     
-    img1.save("sample_image_1.png")
-    print("✓ Created sample_image_1.png")
+    # Draw a yellow triangle (polygon = many-sided shape)
+    # We give it three points to make a triangle
+    triangle_points = [(75, 200), (125, 250), (25, 250)]
+    draw.polygon(triangle_points, fill='yellow', outline='orange', width=3)
     
-    # Create a gradient test image
-    img2 = Image.new('RGB', (300, 200), color='white')
-    draw2 = ImageDraw.Draw(img2)
+    # Save the image
+    filename = "test_image.png"
+    img.save(filename)
     
-    # Create a gradient effect
-    for y in range(200):
-        color_value = int(255 * (y / 200))
-        draw2.line([(0, y), (300, y)], fill=(color_value, 100, 255 - color_value))
+    print(f"✅ Created test image: {filename}")
+    print(f"   Size: 400x300 pixels")
+    print(f"   Contains: red square, green circle, yellow triangle")
     
-    draw2.text((50, 50), "Gradient Test", fill='white', font=font)
-    draw2.text((50, 80), "Colorful gradient image", fill='white', font=font)
-    
-    img2.save("sample_image_2.png")
-    print("✓ Created sample_image_2.png")
-    
-    # Create a simple logo-style image
-    img3 = Image.new('RGBA', (200, 200), color=(0, 0, 0, 0))  # Transparent background
-    draw3 = ImageDraw.Draw(img3)
-    
-    # Draw a simple logo
-    draw3.ellipse([20, 20, 180, 180], fill='blue', outline='darkblue', width=3)
-    draw3.ellipse([50, 50, 150, 150], fill='white', outline='lightblue', width=2)
-    draw3.text((70, 90), "LOGO", fill='blue', font=font)
-    
-    img3.save("sample_logo.png")
-    print("✓ Created sample_logo.png")
-    
-    return ["sample_image_1.png", "sample_image_2.png", "sample_logo.png"]
+    return filename
 
 
-def test_encryption_decryption():
-    """Test the encryption and decryption functionality."""
-    print("\n" + "="*50)
-    print("TESTING ENCRYPTION/DECRYPTION")
-    print("="*50)
+def demo_encryption():
+    """
+    Main demo function.
+    Shows the complete encrypt → decrypt process.
+    """
     
-    # Create encryptor instance
+    # Print welcome message
+    print("\n" + "🔐 "*30)
+    print("IMAGE ENCRYPTION DEMO")
+    print("🔐 "*30)
+    print("\nThis demo will show you how image encryption works!")
+    print("Watch carefully and learn! 😊\n")
+    
+    # ========== STEP 1: CREATE TEST IMAGE ==========
+    image_file = create_test_image()
+    
+    # ========== STEP 2: SET UP ENCRYPTION ==========
+    print("\n" + "="*60)
+    print("STEP 2: Setting up encryption")
+    print("="*60)
+    
+    # Create an ImageEncryption object
+    # Think of this as getting out your encryption toolbox
     encryptor = ImageEncryption()
+    print("✅ Encryption tool ready!")
     
-    # Test password
-    test_password = "demo_password_123"
+    # Choose a password for the demo
+    password = "my_secret_password_123"
+    print(f"✅ Using password: '{password}'")
+    print("   (In real use, keep your password secret!)")
     
-    # Create sample images
-    sample_files = create_sample_images()
-    
-    print(f"\nTesting with password: '{test_password}'")
-    
-    for i, image_file in enumerate(sample_files, 1):
-        print(f"\n--- Test {i}: {image_file} ---")
-        
-        try:
-            # Test encryption
-            print("Encrypting...")
-            encrypted_path, salt = encryptor.encrypt_image(image_file, test_password)
-            print(f"✓ Encrypted: {encrypted_path}")
-            
-            # Verify encrypted file exists
-            if os.path.exists(encrypted_path):
-                original_size = os.path.getsize(image_file)
-                encrypted_size = os.path.getsize(encrypted_path)
-                print(f"  Original size: {original_size:,} bytes")
-                print(f"  Encrypted size: {encrypted_size:,} bytes")
-                print(f"  Size increase: {((encrypted_size - original_size) / original_size * 100):.1f}%")
-            
-            # Test decryption
-            print("Decrypting...")
-            decrypted_path = encryptor.decrypt_image(encrypted_path, test_password)
-            print(f"✓ Decrypted: {decrypted_path}")
-            
-            # Verify decrypted file exists
-            if os.path.exists(decrypted_path):
-                decrypted_size = os.path.getsize(decrypted_path)
-                print(f"  Decrypted size: {decrypted_size:,} bytes")
-            
-            # Test file detection
-            is_encrypted = encryptor.is_encrypted_file(encrypted_path)
-            print(f"  File detection: {'✓ Correctly identified as encrypted' if is_encrypted else '✗ Failed to identify as encrypted'}")
-            
-        except Exception as e:
-            print(f"✗ Error: {str(e)}")
-    
-    print(f"\n{'='*50}")
-    print("TESTING COMPLETED")
-    print("="*50)
-
-
-def test_error_handling():
-    """Test error handling scenarios."""
-    print("\n" + "="*50)
-    print("TESTING ERROR HANDLING")
-    print("="*50)
-    
-    encryptor = ImageEncryption()
-    
-    # Test cases
-    test_cases = [
-        {
-            "name": "Non-existent file",
-            "file": "non_existent_file.jpg",
-            "password": "test",
-            "expected_error": "FileNotFoundError"
-        },
-        {
-            "name": "Wrong password",
-            "file": "sample_image_1.enc",
-            "password": "wrong_password",
-            "expected_error": "Decryption failed"
-        },
-        {
-            "name": "Invalid file format",
-            "file": "requirements.txt",  # Text file, not image
-            "password": "test",
-            "expected_error": "Unsupported image format"
-        }
-    ]
-    
-    for i, test_case in enumerate(test_cases, 1):
-        print(f"\n--- Error Test {i}: {test_case['name']} ---")
-        
-        try:
-            if test_case['name'] == "Wrong password":
-                # First create an encrypted file
-                if os.path.exists("sample_image_1.png"):
-                    encryptor.encrypt_image("sample_image_1.png", "correct_password")
-            
-            # Try the operation
-            if test_case['file'].endswith('.enc'):
-                encryptor.decrypt_image(test_case['file'], test_case['password'])
-            else:
-                encryptor.encrypt_image(test_case['file'], test_case['password'])
-            
-            print(f"✗ Expected error but operation succeeded")
-            
-        except Exception as e:
-            print(f"✓ Caught expected error: {str(e)}")
-    
-    print(f"\n{'='*50}")
-    print("ERROR HANDLING TEST COMPLETED")
-    print("="*50)
-
-
-def cleanup_files():
-    """Clean up test files."""
-    print("\nCleaning up test files...")
-    
-    files_to_remove = [
-        "sample_image_1.png",
-        "sample_image_2.png", 
-        "sample_logo.png",
-        "sample_image_1.enc",
-        "sample_image_2.enc",
-        "sample_logo.enc",
-        "sample_image_1_decrypted.png",
-        "sample_image_2_decrypted.png",
-        "sample_logo_decrypted.png"
-    ]
-    
-    for file in files_to_remove:
-        if os.path.exists(file):
-            os.remove(file)
-            print(f"✓ Removed {file}")
-
-
-def main():
-    """Main demo function."""
-    print("Image Encryption Application - Demo Script")
-    print("="*50)
+    # ========== STEP 3: ENCRYPT THE IMAGE ==========
+    print("\n" + "="*60)
+    print("STEP 3: Encrypting the image")
+    print("="*60)
+    print("Now we'll scramble the image using the password...")
+    print()
     
     try:
-        # Test basic functionality
-        test_encryption_decryption()
+        # Call the encrypt function
+        # This does all the magic we explained in image_encryption.py!
+        encrypted_file = encryptor.encrypt_image(image_file, password)
         
-        # Test error handling
-        test_error_handling()
+        print("\n✨ ENCRYPTION SUCCESSFUL! ✨")
+        print(f"Original file: {image_file}")
+        print(f"Encrypted file: {encrypted_file}")
         
-        # Ask user if they want to clean up
-        print(f"\n{'='*50}")
-        response = input("Demo completed! Clean up test files? (y/n): ").lower().strip()
+        # Show file sizes
+        original_size = os.path.getsize(image_file)
+        encrypted_size = os.path.getsize(encrypted_file)
+        print(f"\nFile sizes:")
+        print(f"  Original: {original_size:,} bytes")
+        print(f"  Encrypted: {encrypted_size:,} bytes")
         
-        if response in ['y', 'yes']:
-            cleanup_files()
-        else:
-            print("Test files preserved for manual inspection.")
-        
-        print("\nDemo completed successfully!")
-        print("\nTo run the GUI application, use:")
-        print("python gui_app.py")
-        
-    except KeyboardInterrupt:
-        print("\n\nDemo interrupted by user.")
-        cleanup_files()
     except Exception as e:
-        print(f"\nDemo failed with error: {str(e)}")
-        cleanup_files()
+        print(f"❌ Error during encryption: {e}")
+        return
+    
+    # ========== STEP 4: DECRYPT THE IMAGE ==========
+    print("\n" + "="*60)
+    print("STEP 4: Decrypting the image")
+    print("="*60)
+    print("Now we'll unscramble it using the same password...")
+    print()
+    
+    try:
+        # Call the decrypt function
+        # This reverses the encryption using XOR!
+        decrypted_file = encryptor.decrypt_image(encrypted_file, password)
+        
+        print("\n✨ DECRYPTION SUCCESSFUL! ✨")
+        print(f"Encrypted file: {encrypted_file}")
+        print(f"Decrypted file: {decrypted_file}")
+        
+        # Compare file sizes
+        decrypted_size = os.path.getsize(decrypted_file)
+        print(f"\nFile sizes:")
+        print(f"  Original: {original_size:,} bytes")
+        print(f"  Decrypted: {decrypted_size:,} bytes")
+        
+        if original_size == decrypted_size:
+            print("  ✅ Same size - good sign!")
+        
+    except Exception as e:
+        print(f"❌ Error during decryption: {e}")
+        return
+    
+    # ========== STEP 5: TEST WRONG PASSWORD ==========
+    print("\n" + "="*60)
+    print("STEP 5: Testing with WRONG password")
+    print("="*60)
+    print("Let's see what happens with the wrong password...")
+    print()
+    
+    wrong_password = "wrong_password"
+    print(f"Trying to decrypt with: '{wrong_password}'")
+    print()
+    
+    try:
+        # This should fail!
+        encryptor.decrypt_image(encrypted_file, wrong_password)
+        print("❌ Unexpected: decryption worked with wrong password!")
+        
+    except ValueError as e:
+        # This is expected!
+        print("✅ Good! Decryption failed as expected:")
+        print(f"   {e}")
+        print("   This proves the password protection works!")
+    
+    # ========== SUMMARY ==========
+    print("\n" + "🎓 "*30)
+    print("WHAT YOU LEARNED:")
+    print("🎓 "*30)
+    print("""
+1. Images can be converted to bytes (raw numbers)
+2. Passwords are converted to encryption keys using SHA256
+3. XOR encryption scrambles the data:
+   - original XOR key = encrypted
+   - encrypted XOR key = original (magic!)
+4. Wrong password = garbage data that won't open as an image
+5. The encrypted file is about the same size as the original
+
+FILES CREATED:
+- test_image.png          (original image)
+- test_image_encrypted.png (scrambled - can't view normally)
+- test_image_decrypted.png (recovered image - should match original!)
+
+Try opening these files to see the difference!
+    """)
+    
+    # Ask if user wants to clean up
+    print("="*60)
+    cleanup = input("Delete test files? (y/n): ").strip().lower()
+    
+    if cleanup in ['y', 'yes']:
+        # Delete all test files
+        test_files = [
+            "test_image.png",
+            "test_image_encrypted.png",
+            "test_image_decrypted.png"
+        ]
+        
+        print("\n🧹 Cleaning up...")
+        for file in test_files:
+            if os.path.exists(file):
+                os.remove(file)
+                print(f"   Deleted: {file}")
+        print("✅ Cleanup complete!")
+    else:
+        print("\n📁 Test files kept for you to examine!")
+    
+    print("\n" + "🎉 "*30)
+    print("DEMO COMPLETE!")
+    print("🎉 "*30)
+    print("\nNow you can try the real program: python3 main.py")
+    print()
 
 
+# Run the demo when script is executed
 if __name__ == "__main__":
-    main()
+    demo_encryption()

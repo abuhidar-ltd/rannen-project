@@ -1,0 +1,136 @@
+===============================================
+IMAGE ENCRYPTION TOOL - QUICK START GUIDE
+===============================================
+
+Hey! This is your super simple guide to get started.
+
+===============================================
+STEP 1: INSTALL
+===============================================
+
+Run this command:
+
+    python3 setup.py
+
+This installs everything you need.
+
+
+===============================================
+STEP 2: TRY THE DEMO
+===============================================
+
+See how it works with a demo:
+
+    python3 demo.py
+
+This creates a test image, encrypts it, and 
+decrypts it. Watch and learn!
+
+
+===============================================
+STEP 3: ENCRYPT YOUR OWN IMAGE
+===============================================
+
+Run the main program:
+
+    python3 main.py
+
+Then:
+1. Choose option 1 (Encrypt)
+2. Enter your image filename (like: photo.jpg)
+3. Enter a password
+4. Done! You'll get a file called photo_encrypted.png
+
+
+===============================================
+STEP 4: DECRYPT IT BACK
+===============================================
+
+Run again:
+
+    python3 main.py
+
+Then:
+1. Choose option 2 (Decrypt)
+2. Enter the encrypted filename (photo_encrypted.png)
+3. Enter the SAME password
+4. Done! You'll get photo_decrypted.png
+
+
+===============================================
+WHAT'S HAPPENING?
+===============================================
+
+When you ENCRYPT:
+1. Your image becomes bytes (numbers)
+2. Password becomes an encryption key
+3. XOR operation scrambles the bytes
+4. Scrambled bytes saved to new file
+
+When you DECRYPT:
+1. Read the scrambled bytes
+2. Password becomes same key
+3. XOR again (it reverses!)
+4. Image is recovered!
+
+
+===============================================
+IMPORTANT TIPS
+===============================================
+
+✅ Keep your password safe!
+✅ Use the EXACT same password to decrypt
+✅ The encrypted file looks like garbage - this is normal!
+✅ All the code has LOTS of comments - read them!
+
+❌ Don't use this for real security (it's for learning!)
+❌ Don't forget your password (file becomes unrecoverable!)
+
+
+===============================================
+LEARNING THE CODE
+===============================================
+
+Want to understand how it works?
+
+1. Start by running demo.py and watching what happens
+2. Read main.py - it's the easiest file
+3. Then read image_encryption.py - has all the logic
+4. Try changing things and see what happens!
+
+Every line has comments explaining what it does.
+
+
+===============================================
+FILES YOU'LL CREATE
+===============================================
+
+When you encrypt "photo.jpg":
+- photo_encrypted.png (the scrambled version)
+
+When you decrypt:
+- photo_decrypted.png (the recovered version)
+
+
+===============================================
+NEED HELP?
+===============================================
+
+1. Read the README.md file
+2. Read the comments in the code
+3. Run demo.py to see examples
+4. Try googling "XOR encryption" to learn more
+
+
+===============================================
+HAVE FUN LEARNING!
+===============================================
+
+The best way to learn is by:
+- Running the code
+- Reading the comments
+- Trying different things
+- Breaking stuff and fixing it!
+
+Enjoy! 🔐✨
+
